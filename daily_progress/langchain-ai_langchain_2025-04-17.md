@@ -1,0 +1,65 @@
+# langchain-ai/langchain Daily Progress - 2025-04-17
+
+## Issues
+- core: Raise `AttributeError` (not `ModuleNotFoundError`) from`__getattr__` #30893
+- opensearch: create standalone langchain-opensearch package #30892
+- langchain-openai: Fix openapi _resize case. #30888
+- multiple: permit optional fields on multimodal content blocks #30887
+- community: Fix HTTP protocol handling in AzureAISearchRetriever._build_search_url #30886
+- AIMessage not allowed as structured_output #30885
+- core[patch]: add retries and better messages to draw_mermaid_png #30881
+- docs: update multi-modal docs #30880
+- `langchain-chroma`: Query filters are extremely restrictive (by type), is this by design?? #30879
+- community: add gpt-4.1 and gpt-4.5-preview model pricing and name handling #30877
+- community: Remove no-untyped-def escapes #30873
+- langchain_openai: clean duplicate code for openai embedding. #30872
+- Bug: llm.ainvoke is traced different from llm.invoke (won't be traced) #30870
+- Fix async indexing issue #30869
+- langchain: return attachments in _get_response #30853
+- _get_response from base.py does not return generated file id when running as an agent #30851
+- [community] Propose PDFRouterParser and Loader #30847
+- community: Add deprecation decorator to SingleStore community integrations #30846
+- AzureCosmosDBNoSqlVectorSearch custom text_key, metadata_key, embedding_key key error #30844
+- [community] Propose some @deprecated APIs for PDF #30842
+- docs: Register langchain-singlestore integration #30841
+- AWS OSS Doc ID and Filter nor working #30839
+- ChatTongyi has the with_stuctured_output method, but it is always None #30838
+- Scope Error while trying to use Anthropic Model with GoogleVertex library. #30837
+- Remote malicious email injection which leads to control of the agent and forward the user's email #30833
+- community: Strip URLs from sitemap. #30830
+- SitemapLoader URLs are not properly strippe #30829
+- langchain: catch if there are only system messages in a prompt for anthropic #30822
+- Feature/persian text processing #30821
+- community: add mypy warn_unused_ignores rule #30816
+
+## Pull Requests
+- core: Raise `AttributeError` (not `ModuleNotFoundError`) from`__getattr__` #30893
+- opensearch: create standalone langchain-opensearch package #30892
+- langchain-openai: Fix openapi _resize case. #30888
+- multiple: permit optional fields on multimodal content blocks #30887
+- community: Fix HTTP protocol handling in AzureAISearchRetriever._build_search_url #30886
+- core[patch]: add retries and better messages to draw_mermaid_png #30881
+- docs: update multi-modal docs #30880
+- community: add gpt-4.1 and gpt-4.5-preview model pricing and name handling #30877
+- community: Remove no-untyped-def escapes #30873
+- langchain_openai: clean duplicate code for openai embedding. #30872
+- Fix async indexing issue #30869
+- langchain: return attachments in _get_response #30853
+- [community] Propose PDFRouterParser and Loader #30847
+- community: Add deprecation decorator to SingleStore community integrations #30846
+- [community] Propose some @deprecated APIs for PDF #30842
+- docs: Register langchain-singlestore integration #30841
+- community: Strip URLs from sitemap. #30830
+- langchain: catch if there are only system messages in a prompt for anthropic #30822
+- Feature/persian text processing #30821
+- community: add mypy warn_unused_ignores rule #30816
+- community: have ChatLlamaCpp handle "auto" and "any" for tool_choice #30810
+- partners: ChatAnthropic supports urls #30809
+- langchain: improve performance split_list_of_docs #30808
+- Removing `dereference_refs` from `_convert_json_schema_to_openai_function` #30806
+- langchain-openai: support custom fallback content for tool-only messages #30803
+- Improvements to `ChatPerplexity` Integration  #30802
+- core: Cleanup Pydantic models and handle deprecation warnings #30799
+- Add Compass Labs toolkits to langchain docs #30794
+- community: add ChatLLM7 integration #30765
+- partners/openai: OpenAIEmbeddings not respecting chunk_size argument #30757

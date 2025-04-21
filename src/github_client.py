@@ -57,7 +57,7 @@ class GitHubClient:
 
 
     def export_daily_progress(self, repo):
-        today = datetime.now().date().isoformat()
+        today = datetime.date.today().isoformat()
 
         updates = self.fetch_updates(repo,since=today)
 

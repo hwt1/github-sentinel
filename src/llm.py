@@ -34,6 +34,7 @@ class LLM:
             response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
+                    {'role':'system','content':'你是一个报告专家，首先确保始终使用中文生成报告，其次对每份报告进行分析总结'},
                     {"role": "user", "content": prompt}
                 ]
             )

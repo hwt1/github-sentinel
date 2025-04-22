@@ -13,6 +13,8 @@ class LLM:
             base_url="https://vip.apiyi.com/v1",
             api_key=api_key
         )
+        with open('prompts/report_prompt.txt','r',encoding='utf-8') as f:
+            self.system_prompts = f.read()
         LOG.add("daily_progress/llm_logs.log", rotation="1 MB", level="DEBUG")
 
 
@@ -34,7 +36,7 @@ class LLM:
             response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {'role':'system','content':'你是一个报告专家，确保始终使用中文生成报告，对每份报告进行分析总结'},
+                    {'role':'system','content':self.system_prompts},
                     {"role": "user", "content": prompt}
                 ]
             )

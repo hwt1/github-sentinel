@@ -21,20 +21,63 @@ def export_progress_by_date_range(repo,days):
     report,report_file_path = report_generator.generate_report_by_date_range(raw_file_path,days)
     return report,report_file_path
 
+def add_subscription(item):
+    subscription_manager.add_subscription(item)
+    subs = subscription_manager.list_subscriptions()
+    return [[s] for s in subs],'',gr.update(choices=subs)
+
+def remove_subscription(selected):
+    if selected:
+        print(f"需要删除的仓库："+selected)
+        subscription_manager.remove_subscription(selected)
+    subs = subscription_manager.list_subscriptions()
+    return [[s] for s in subs],gr.update(choices=subs)
+def load_subscriptions():
+    subs = subscription_manager.list_subscriptions()
+    return [[s] for s in subs], gr.update(choices=subs)
+
 # 创建 Gradio 界面
-demo = gr.Interface(
-    fn=export_progress_by_date_range,
-    title='GitHubSentinel',
-    inputs=[
-        gr.Dropdown(
-            subscription_manager.list_subscriptions(),label='订阅列表',info='已订阅GitHub项目'
-        ),
-        gr.Slider(value=2,minimum=1,maximum=7,step=1,label='报告周期',info='生成项目过去一段时间进展，单位：天')
-    ],
-    outputs=[gr.Markdown(),gr.File(label='下载报告')]
-)
+with gr.Blocks() as app:
+    with gr.Tabs():
+        with gr.Tab("📊 报告生成") as report_tab:
+            gr.Markdown('## GitHub 项目进展报告生成器')
+
+            dropdown = gr.Dropdown(
+                choices=subscription_manager.list_subscriptions(),
+                label='订阅列表',
+                info='已订阅的GitHub项目'
+            )
+            slider = gr.Slider(value=2,minimum=1,maximum=7,step=1,label='报告周期',info='生成过去几天的进展')
+            generate_btn= gr.Button('生成报告')
+            report_md = gr.Markdown()
+            report_file = gr.File(label='下载报告')
+
+            generate_btn.click(export_progress_by_date_range, inputs=[dropdown, slider], outputs=[report_md, report_file])
+
+            # 当前切换到该tab时，刷新下拉选项
+            report_tab.select(lambda : gr.update(choices=subscription_manager.list_subscriptions()),outputs=dropdown)
+
+        with gr.Tab('📋 订阅管理') as subscription_tab:
+            gr.Markdown('### 📋 订阅仓库管理')
+
+            table = gr.Dataframe(headers=['订阅仓库'], interactive=False)
+
+            with gr.Row():
+                new_item = gr.Textbox(label='新增')
+                add_btn = gr.Button("➕ 添加")
+            with gr.Row():
+                dropdown = gr.Dropdown(label='选择要删除的任务')
+                del_btn = gr.Button("🗑️ 删除所选行")
+
+            # 每次进入 Tab 时刷新数据
+            subscription_tab.select(load_subscriptions, outputs=[table, dropdown])
+
+            add_btn.click(add_subscription, inputs=[new_item], outputs=[table, new_item, dropdown])
+            del_btn.click(remove_subscription, inputs=[dropdown], outputs=[table, dropdown])
+
+
 
 if __name__ == '__main__':
-    demo.launch(share=False,server_name='127.0.0.1') # 启动界面并设置为公共可访问
+    app.launch(share=False,server_name='127.0.0.1') # 启动界面并设置为公共可访问
     # 可选带有用户认证的启动方式
     # demo.launch(share=True,server_name = '127.0.0.1',auth = ('hwt','1234'))

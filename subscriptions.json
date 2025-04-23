@@ -1,4 +1,5 @@
 [
     "langchain-ai/langchain",
-    "DjangoPeng/GitHubSentinel"
+    "DjangoPeng/GitHubSentinel",
+    "Kong/kong"
 ]

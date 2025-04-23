@@ -1,7 +1,7 @@
 # src/report_generator.py
 
 import os
-from datetime import date
+from datetime import date, timedelta
 
 from logger import LOG
 

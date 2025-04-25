@@ -1,8 +1,13 @@
 {
-    "notification_settings": {
-        "email": "your_email@example.com",
-        "slack_webhook_url": "your_slack_webhook_url"
+    "email": {
+        "smtp_server":"smtp.163.com",
+        "smtp_port": "",
+        "from": "18805053811@163.com",
+        "password": "",
+        "to": "2271484991@qq.com"
     },
+    "slack_webhook_url": "your_slack_webhook_url",
     "subscriptions_file": "subscriptions.json",
-    "update_interval": 86400
+    "github_progress_frequency_days": 1,
+    "github_progress_execution_time": "08:00"
 }

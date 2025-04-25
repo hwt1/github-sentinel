@@ -78,6 +78,6 @@ with gr.Blocks() as app:
 
 
 if __name__ == '__main__':
-    app.launch(share=False,server_name='127.0.0.1') # 启动界面并设置为公共可访问
+    app.launch(share=True,server_name='127.0.0.1') # 启动界面并设置为公共可访问
     # 可选带有用户认证的启动方式
     # demo.launch(share=True,server_name = '127.0.0.1',auth = ('hwt','1234'))

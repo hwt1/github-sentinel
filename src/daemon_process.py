@@ -13,6 +13,7 @@ from logger import LOG
 from notifier import Notifier
 from report_generator import ReportGenerator
 from hacker_news_client import HackerNewsClient
+from report_type import Report_Type
 from subscription_manager import SubscriptionManager
 
 
@@ -32,8 +33,8 @@ def github_job(subscription_manager,github_client,report_generator,notifier,days
 
         report,report_file_path = report_generator.generate_report_by_date_range(markdown_file_path,days)
         email_subject = f"[GiHubSentinel]{repo} 进展简报"
-        notifier.notify(email_subject,report)
-    LOG.info(f"[定时任务执行完毕]")
+        notifier.notify(email_subject,report,Report_Type.GITHUB)
+    LOG.info(f"[GitHub 定时任务执行完毕]")
 
 def hacker_news_job(report_generator,notifier):
     LOG.info('[开始执行 hacker news 定时任务]')
@@ -43,7 +44,8 @@ def hacker_news_job(report_generator,notifier):
     file_path = Path(report_file_path)
     file_name = file_path.name
     name, ext = os.path.splitext(file_name)
-    notifier.notify(name,report)
+    notifier.notify(name,report,Report_Type.HACKER)
+    LOG.info(f"[hacker news 定时任务执行完毕]")
 
 def main():
     # 设置信号处理器
@@ -62,24 +64,24 @@ def main():
 
     hacker_news_job(report_generator,notifier)
 
-    # 安排每天的定时任务
-    schedule.every(config.freq_days).days.at(
-        config.exec_time
-    ).do(github_job,subscription_manager,github_client,report_generator,notifier,config.freq_days)
-
-    for time_point in config.hacker_exec_time:
-        schedule.every(config.hacker_freq_days).days.at(
-            time_point
-        ).do(hacker_news_job,report_generator,notifier)
-
-    try:
-        # 在守护进程中持续运行
-        while True:
-            schedule.run_pending()
-            time.sleep(1) # 短暂休眠以减少 CPU 使用
-    except Exception as e:
-        LOG.error(f"主进程发生异常：{str(e)}")
-        sys.exit(1)
+    # # 安排每天的定时任务
+    # schedule.every(config.freq_days).days.at(
+    #     config.exec_time
+    # ).do(github_job,subscription_manager,github_client,report_generator,notifier,config.freq_days)
+    #
+    # for time_point in config.hacker_exec_time:
+    #     schedule.every(config.hacker_freq_days).days.at(
+    #         time_point
+    #     ).do(hacker_news_job,report_generator,notifier)
+    #
+    # try:
+    #     # 在守护进程中持续运行
+    #     while True:
+    #         schedule.run_pending()
+    #         time.sleep(1) # 短暂休眠以减少 CPU 使用
+    # except Exception as e:
+    #     LOG.error(f"主进程发生异常：{str(e)}")
+    #     sys.exit(1)
 
 if __name__ == '__main__':
     main()

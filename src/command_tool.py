@@ -13,7 +13,7 @@ from subscription_manager import SubscriptionManager
 def main():
     config = Config()
     github_client = GitHubClient(config.github_token)
-    notifier = Notifier(config.notification_settings)
+
     llm = LLM()
     report_generator = ReportGenerator(llm)
     subscription_manager = SubscriptionManager(config.subscriptions_file)

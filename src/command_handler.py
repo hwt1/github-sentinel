@@ -2,6 +2,9 @@
 
 import argparse
 
+from hacker_news_client import HackerNewsClient
+
+
 class CommandHandler:
     def __init__(self, github_client, subscription_manager, report_generator):
         self.github_client = github_client
@@ -44,6 +47,9 @@ class CommandHandler:
         parser_generate.add_argument('file', type=str, help='The markdown file to generate report from')
         parser_generate.set_defaults(func=self.generate_daily_report)
 
+        parser_hacker_generate = subparsers.add_parser('generate-hacker',help='Generate real hacker news report')
+        parser_hacker_generate.set_defaults(func = self.export_hacker_news_progress)
+
         parser_help = subparsers.add_parser('help', help='Show help message')
         parser_help.set_defaults(func=self.print_help)
 
@@ -79,6 +85,11 @@ class CommandHandler:
     def generate_daily_report(self, args):
         self.report_generator.generate_daily_report(args.file)
         print(f"Generated daily report from file: {args.file}")
+
+    def export_hacker_news_progress(self,args):
+        top_stories = HackerNewsClient.fetch_hackernews_top_stories()
+        report, report_file_path = self.report_generator.generate_hacker_news_report(top_stories)
+        return report, report_file_path
 
     def print_help(self, args=None):
         self.parser.print_help()

@@ -4,6 +4,7 @@ from config import Config
 from github_client import GitHubClient
 from llm import LLM
 from report_generator import ReportGenerator
+from hacker_news_client import HackerNewsClient
 from subscription_manager import SubscriptionManager
 
 # gradio 页面方式启动
@@ -19,6 +20,11 @@ def export_progress_by_date_range(repo,days):
     # 定义一个函数，用于导出和生成指定时间范围内项目的进展报告
     raw_file_path = github_client.export_progress_by_date_range(repo,days)
     report,report_file_path = report_generator.generate_report_by_date_range(raw_file_path,days)
+    return report,report_file_path
+
+def export_hacker_news_progress():
+    top_stories = HackerNewsClient.fetch_hackernews_top_stories()
+    report,report_file_path = report_generator.generate_hacker_news_report(top_stories)
     return report,report_file_path
 
 def add_subscription(item):
@@ -39,7 +45,7 @@ def load_subscriptions():
 # 创建 Gradio 界面
 with gr.Blocks() as app:
     with gr.Tabs():
-        with gr.Tab("📊 报告生成") as report_tab:
+        with gr.Tab("📊 GitHub报告生成") as github_report_tab:
             gr.Markdown('## GitHub 项目进展报告生成器')
 
             dropdown = gr.Dropdown(
@@ -55,7 +61,7 @@ with gr.Blocks() as app:
             generate_btn.click(export_progress_by_date_range, inputs=[dropdown, slider], outputs=[report_md, report_file])
 
             # 当前切换到该tab时，刷新下拉选项
-            report_tab.select(lambda : gr.update(choices=subscription_manager.list_subscriptions()),outputs=dropdown)
+            github_report_tab.select(lambda : gr.update(choices=subscription_manager.list_subscriptions()),outputs=dropdown)
 
         with gr.Tab('📋 订阅管理') as subscription_tab:
             gr.Markdown('### 📋 订阅仓库管理')
@@ -74,6 +80,15 @@ with gr.Blocks() as app:
 
             add_btn.click(add_subscription, inputs=[new_item], outputs=[table, new_item, dropdown])
             del_btn.click(remove_subscription, inputs=[dropdown], outputs=[table, dropdown])
+
+        with gr.Tab("📊 HackerNews报告生成") as hacker_report_tab:
+            gr.Markdown('## HackerNews 项目进展报告生成器-实时')
+
+            generate_btn= gr.Button('生成报告')
+            report_md = gr.Markdown()
+            report_file = gr.File(label='下载报告')
+
+            generate_btn.click(export_hacker_news_progress, outputs=[report_md, report_file])
 
 
 

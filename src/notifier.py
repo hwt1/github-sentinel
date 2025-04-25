@@ -5,24 +5,32 @@ from email.mime.text import MIMEText
 import markdown2
 
 from logger import LOG
+from report_type import Report_Type
 
 
 class Notifier:
     def __init__(self, email_settings):
         self.email_settings = email_settings
     
-    def notify(self,repo, report):
+    def notify(self,repo, report,report_type):
         # Implement notification logic, e.g., send email or Slack message
         if self.email_settings:
-            self.send_email(repo,report)
+            self.send_email(repo,report,report_type)
         else:
             LOG.warning("邮件设置未配置正确，无法发送通知")
 
-    def send_email(self,subject,report):
+    def send_email(self,subject,report,report_type):
         LOG.info('准备发送邮件')
         msg = MIMEMultipart()
         msg['From'] = self.email_settings['from']
-        msg['To'] =self.email_settings['to']
+
+        if report_type == Report_Type.GITHUB:
+            msg['To'] =self.email_settings['github_to']
+        elif report_type == Report_Type.HACKER:
+            msg['To'] = self.email_settings['hacker_to']
+        else:
+            LOG.error('report type is not exist')
+
         msg['Subject'] = subject
 
         # 将Markdown内容转换为 HTML

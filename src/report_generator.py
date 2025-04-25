@@ -84,7 +84,7 @@ class ReportGenerator:
         now = datetime.now()
         timestamp = now.strftime("%Y-%m-%d_%H")  # e.g., 2025-04-25_15
 
-        report_file_path = repo_dir / f"hacker_news_{timestamp}.md"
+        report_file_path = str(repo_dir / f"hacker_news_{timestamp}.md")
         with open(report_file_path,'w+',encoding='utf-8') as report_file:
             report_file.write(report)
 

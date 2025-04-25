@@ -12,10 +12,10 @@ class Notifier:
     def __init__(self, email_settings):
         self.email_settings = email_settings
     
-    def notify(self,repo, report,report_type):
+    def notify(self,subject, report,report_type):
         # Implement notification logic, e.g., send email or Slack message
         if self.email_settings:
-            self.send_email(repo,report,report_type)
+            self.send_email(subject,report,report_type)
         else:
             LOG.warning("邮件设置未配置正确，无法发送通知")
 
@@ -42,7 +42,8 @@ class Notifier:
             with smtplib.SMTP_SSL(self.email_settings['smtp_server'],self.email_settings['smtp_port']) as server:
                 LOG.debug('登录SMTP服务器')
                 server.login(msg['From'],self.email_settings['password'])
-                server.sendmail(msg['From'],msg['To'],msg.as_string())
+                LOG.info(f"目标邮件地址：{msg['To']}")
+                server.sendmail(msg['From'],msg['To'].split(','),msg.as_string())
                 LOG.info('邮件发送成功')
         except Exception as e:
             LOG.error(f"发送邮件失败：{str(e)}")
@@ -69,4 +70,4 @@ if __name__ == '__main__':
 - 关闭了一些未解决的问题。
 
 """
-    notifier.notify(test_repo, test_report)
+    notifier.notify(test_repo, test_report,Report_Type.HACKER)

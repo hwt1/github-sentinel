@@ -5,7 +5,7 @@
         "from": "18805053811@163.com",
         "password": "",
         "github_to": "2271484991@qq.com",
-        "hacker_to": "2271484991@qq.com,578114734@qq.com"
+        "hacker_to": "578114734@qq.com,2271484991@qq.com"
     },
     "slack_webhook_url": "your_slack_webhook_url",
     "subscriptions_file": "subscriptions.json",

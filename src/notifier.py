@@ -18,12 +18,12 @@ class Notifier:
         else:
             LOG.warning("邮件设置未配置正确，无法发送通知")
 
-    def send_email(self,repo,report):
+    def send_email(self,subject,report):
         LOG.info('准备发送邮件')
         msg = MIMEMultipart()
         msg['From'] = self.email_settings['from']
         msg['To'] =self.email_settings['to']
-        msg['Subject'] = f"[GiHubSentinel]{repo} 进展简报"
+        msg['Subject'] = subject
 
         # 将Markdown内容转换为 HTML
         html_report = markdown2.markdown(report)

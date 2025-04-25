@@ -1,7 +1,7 @@
 # src/report_generator.py
-
 import os
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
+from pathlib import Path
 
 from logger import LOG
 
@@ -70,6 +70,22 @@ class ReportGenerator:
         report = self.llm.generate_daily_report(markdown_content)
         report_file_path = os.path.splitext(markdown_file_path)[0] + f"_report.md"
         with open(report_file_path, 'w+',encoding='utf-8') as report_file:
+            report_file.write(report)
+
+        LOG.info(f"Generated report saved to {report_file_path}")  # 记录生成报告日志
+        return report,report_file_path
+
+    def generate_hacker_news_report(self,top_stories):
+        report = self.llm.generate_hacker_news_report(top_stories)
+
+        repo_dir = Path('daily_progress/hacker_news')
+        repo_dir.mkdir(parents=True,exist_ok=True)
+
+        now = datetime.now()
+        timestamp = now.strftime("%Y-%m-%d_%H")  # e.g., 2025-04-25_15
+
+        report_file_path = repo_dir / f"hacker_news_{timestamp}.md"
+        with open(report_file_path,'w+',encoding='utf-8') as report_file:
             report_file.write(report)
 
         LOG.info(f"Generated report saved to {report_file_path}")  # 记录生成报告日志

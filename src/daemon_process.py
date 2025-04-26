@@ -64,24 +64,24 @@ def main():
 
     hacker_news_job(report_generator,notifier)
 
-    # # 安排每天的定时任务
-    # schedule.every(config.freq_days).days.at(
-    #     config.exec_time
-    # ).do(github_job,subscription_manager,github_client,report_generator,notifier,config.freq_days)
-    #
-    # for time_point in config.hacker_exec_time:
-    #     schedule.every(config.hacker_freq_days).days.at(
-    #         time_point
-    #     ).do(hacker_news_job,report_generator,notifier)
-    #
-    # try:
-    #     # 在守护进程中持续运行
-    #     while True:
-    #         schedule.run_pending()
-    #         time.sleep(1) # 短暂休眠以减少 CPU 使用
-    # except Exception as e:
-    #     LOG.error(f"主进程发生异常：{str(e)}")
-    #     sys.exit(1)
+    # 安排每天的定时任务
+    schedule.every(config.freq_days).days.at(
+        config.exec_time
+    ).do(github_job,subscription_manager,github_client,report_generator,notifier,config.freq_days)
+
+    for time_point in config.hacker_exec_time:
+        schedule.every(config.hacker_freq_days).days.at(
+            time_point
+        ).do(hacker_news_job,report_generator,notifier)
+
+    try:
+        # 在守护进程中持续运行
+        while True:
+            schedule.run_pending()
+            time.sleep(1) # 短暂休眠以减少 CPU 使用
+    except Exception as e:
+        LOG.error(f"主进程发生异常：{str(e)}")
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
